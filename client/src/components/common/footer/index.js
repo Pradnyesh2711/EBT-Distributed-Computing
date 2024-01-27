@@ -12,10 +12,10 @@ const Footer = () => {
           target="_blank"
           rel="noreferrer"
         >
-          Himanshu Chandola
+          DC
         </a>{" "}
         as{" "}
-          MCA 4th Sem Project
+          PROJECT
       </h4>
     </div>
   );
