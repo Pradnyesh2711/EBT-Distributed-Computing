@@ -1,17 +1,26 @@
-const express = require('express')
-const app = express()
-const PORT =  5000
+import express from 'express';
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDatabase from './config/db.js';
+import expenseRouter from './Router/expenseRouter.js';
 
+dotenv.config();
+const app = express();
 
+//const PORT = 5000;
+connectDatabase();
 
-app.get("/",(req,res) => {
-	res.send({
-		"msg":"Up and running baby"
-	})
-})
+app.use(express.json());
+app.use(cors());
 
-app.listen(PORT,() => {
-	console.log("Listening on port : 5000")
-})
+app.use('/api/expenses', expenseRouter);
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
 
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
