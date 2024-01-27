@@ -7,7 +7,7 @@ const Footer = () => {
       <h4>
        Made  by{" "}
         <a
-          href="https://github.com/himanshuchandola"
+          href=""
           className="author-name"
           target="_blank"
           rel="noreferrer"
