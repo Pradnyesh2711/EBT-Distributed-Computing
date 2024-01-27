@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <div className="header">
       <Link to="/" className="logo-a">
-        <label className="logo">Track My Expenses</label>
+        <label className="logo">Expense Budget Tracker System</label>
       </Link>
       <div className="header-menu">
         <Link to="">
