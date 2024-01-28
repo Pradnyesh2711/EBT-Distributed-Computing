@@ -6,15 +6,28 @@ import { deleteExpense } from "../../reduxstore/actions/expenses";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "./edit-expense-modal";
+import axios from "axios";
 
 const ExpenseTable = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [editDetails, setEditDetails] = useState();
   const { list } = props;
   const dispatch = useDispatch();
-  const handleDeleteExpense = (item) => {
-    dispatch(deleteExpense(item));
-    toast("Data Deleted SuccessFully !!!");
+  const handleDeleteExpense =async (item) => {
+
+    try{
+      const res = await axios.delete(`http://localhost:5000/api/expenses/${item}`);
+      if (res.status >= 200 && res.status < 300) {
+        dispatch(deleteExpense(item));
+        toast("Data Deleted SuccessFully !!!");
+        console.log('Success:');
+      } else {
+        console.error('Unsuccessful response:', res.status);
+      }
+    }catch(e){
+      console.log(e);
+
+    }
   };
 
   const openEditModal = (item) => {

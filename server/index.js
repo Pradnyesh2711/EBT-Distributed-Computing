@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDatabase from './config/db.js';
 import expenseRouter from './Router/expenseRouter.js';
+import budgetRouter from './Router/budgetRouter.js';
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/expenses', expenseRouter);
+app.use('/api/budget', budgetRouter);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

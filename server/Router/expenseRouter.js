@@ -10,7 +10,7 @@ expenseRouter.get("/", async (req, res) => {
     res.json(expenses);
   } catch (e) {
     console.log("Error : ", e);
-    res.status(400).send({
+    return res.status(400).send({
       msg: e.message,
     });
   }
@@ -19,23 +19,25 @@ expenseRouter.get("/", async (req, res) => {
 //POST
 expenseRouter.post('/', async (req, res) => {
     try {
-      const { date, category, description, amount } = req.body;
-  
+      const { date, description, amount, category } = req.body;
+      if(!date || !description || !amount || !category){
+        return res.status(400).send("Please enter all data")
+      }
       // Create a new expense
       const newExpense = await Expense.create({
         date,
-        category,
         description,
         amount,
+        category,
       });
   
-      res.status(200).send({
+      return res.status(200).send({
         msg: "Expense added!",
         data: newExpense,
       });
     } catch (error) {
       console.error("Error:", error);
-      res.status(400).send({
+      return res.status(400).send({
         msg: error.message || "An error occurred while adding the expense.",
       });
     }
@@ -44,6 +46,7 @@ expenseRouter.post('/', async (req, res) => {
   //PUT
   expenseRouter.put('/:id', async (req, res) => {
     try {
+      
       const updatedExpense = await Expense.findByIdAndUpdate(req.params.id, req.body, { new: true });
       res.json(updatedExpense);
     } catch (error) {
@@ -54,11 +57,20 @@ expenseRouter.post('/', async (req, res) => {
   //Delete
   expenseRouter.delete('/:id', async (req, res) => {
     try {
-      await Expense.findByIdAndDelete(req.params.id);
-      res.sendStatus(204); 
+      const { id } = req.params;
+  
+      const result = await Expense.findByIdAndDelete(id);
+  
+      if (result) {
+        return res.status(200).send({ msg: "Expense deleted successfully!" });
+      } else {
+        return res.status(404).send({ msg: "Expense not found!" });
+      }
     } catch (error) {
-      res.status(400).json({ error: 'Bad request' });
+      console.error("Error deleting expense:", error);
+      return res.status(500).send({ error: "Internal server error" });
     }
   });
+  
   
   export default expenseRouter;

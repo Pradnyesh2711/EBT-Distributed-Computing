@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import "./due-expense.css";
 import dateFormat from "dateformat";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const DueExpenses = () => {
   const [limit, setLimit] = useState(0);
@@ -15,7 +17,47 @@ const DueExpenses = () => {
     setLimit(e.target.value);
   };
 
-  const handleLimit = () => {
+  const handleLimit = async () => {
+    try {
+      // Check if budget data already exists
+      const existingBudgetRes = await axios.get(
+        "http://localhost:5000/api/budget"
+      );
+      if (existingBudgetRes.status >= 200 && existingBudgetRes.status <= 300) {
+        // If budget data exists, extract the ID
+        const existingBudget = existingBudgetRes.data;
+        if (existingBudget) {
+          const budgetId = existingBudget._id;
+          // Use PUT request to update existing budget
+          const updateRes = await axios.put(
+            `http://localhost:5000/api/budget/${budgetId}`,
+            {
+              amount: limit,
+            }
+          );
+          if (updateRes.status >= 200 && updateRes.status <= 300) {
+            console.log("Budget updated in the database");
+          } else {
+            console.log("Failed to update budget in the database");
+          }
+        }
+      } else {
+        // If no budget data exists, add a new budget record with POST request
+        const res = await axios.post("http://localhost:5000/api/budget", {
+          amount: limit,
+        });
+        if (res.status >= 200 && res.status <= 300) {
+          console.log("Budget added");
+          alert("Budget set");
+        } else {
+          console.log("Enter valid budget");
+          toast("Enter valid budget");
+        }
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+
     let array = [...sortedListArray];
     let totalSum = 0;
     array.forEach((element) => {

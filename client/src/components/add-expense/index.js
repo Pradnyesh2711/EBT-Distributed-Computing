@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import SuccessModal from "./success-modal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios';
+
 
 const AddExpense = () => {
   const [description, setDescription] = useState("");
@@ -18,23 +20,40 @@ const AddExpense = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { goBack } = useHistory();
 
-  const handleSubmit = () => {
-    if (description === "" || amount === "" || category === "") {
+  const handleSubmit = async () => {
+    try {
+      const data = {
+        dueDate,
+        description,
+        amount,
+        category,
+        createdAt: new Date(),
+      };
+  
+      //Move the logic outside the addData function
+      const res = await axios.post('http://localhost:5000/api/expenses', data);
+  
+      if (res.status >= 200 && res.status < 300) {
+        // Handle successful response
+        console.log('Success:', res.data);
+        
+        // You can perform further actions here based on the successful response
+      } else {
+        // Handle unsuccessful response (non-2xx status code)
+        toast("Please Enter Valid Data !!!");
+        console.error('Unsuccessful response:', res.status, res.data);
+        // You can perform further actions here based on the unsuccessful response
+      }
+      console.log('Add data executed')
+      dispatch(addExpense(data));
+      console.log('dispatch called');
+      setModalOpen(true);
+    } catch (error) {
       toast("Please Enter Valid Data !!!");
-      return;
+      console.error('Error in handleSubmit:', error);
     }
-
-    const data = {
-      dueDate,
-      description,
-      amount,
-      category,
-      createdAt: new Date(),
-    };
-
-    dispatch(addExpense(data));
-    setModalOpen(true);
   };
+  
 
   return (
     <div className="expense-details">
