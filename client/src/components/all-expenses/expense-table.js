@@ -7,26 +7,46 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "./edit-expense-modal";
 import axios from "axios";
+import { useEffect } from "react";
 
 const ExpenseTable = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [editDetails, setEditDetails] = useState();
-  const { list } = props;
-  const dispatch = useDispatch();
-  const handleDeleteExpense =async (item) => {
+  const { list, setListArr } = props;
 
-    try{
-      const res = await axios.delete(`http://localhost:5000/api/expenses/${item}`);
+
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/expenses");
+        const expenses = response.data;
+        setListArr(expenses); // Assuming you have a state variable named `list` to store the expenses
+      } catch (error) {
+        console.error("Error fetching expenses:", error);
+      }
+    };
+
+    fetchExpenses();
+  }, [setListArr]);
+
+
+
+  const dispatch = useDispatch();
+  const handleDeleteExpense = async (item) => {
+    try {
+      const res = await axios.delete(`http://localhost:5000/api/expenses/${item._id}`);
       if (res.status >= 200 && res.status < 300) {
-        dispatch(deleteExpense(item));
-        toast("Data Deleted SuccessFully !!!");
+        // dispatch(deleteExpense(item));
+        toast("Data Deleted Successfully !!!");
         console.log('Success:');
+
+        // Remove the deleted item from the listArr state
+        setListArr((prevList) => prevList.filter((expense) => expense._id !== item._id));
       } else {
         console.error('Unsuccessful response:', res.status);
       }
-    }catch(e){
+    } catch (e) {
       console.log(e);
-
     }
   };
 
@@ -76,7 +96,7 @@ const ExpenseTable = (props) => {
         </div>
         <div className="table-body">
           <div className="table">
-            {list.length ? (
+            {(list && list.length) ? (
               list.map((data, i) => {
                 return (
                   <div className="table-row" key={i}>
@@ -85,7 +105,7 @@ const ExpenseTable = (props) => {
                     </div>
                     <div className="table-column date">
                       <div className="">
-                        {dateFormat(data.dueDate, "dd-mm-yyyy")}
+                        {dateFormat(data.date, "dd-mm-yyyy")}
                       </div>
                     </div>
                     <div className="table-column category">
@@ -136,6 +156,8 @@ const ExpenseTable = (props) => {
         {showModal ? (
           <Modal
             show={showModal}
+            setListArr={setListArr}
+            list={list}
             handleCloseBtn={hideModal}
             details={editDetails}
           />

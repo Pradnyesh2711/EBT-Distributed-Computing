@@ -23,20 +23,20 @@ const AddExpense = () => {
   const handleSubmit = async () => {
     try {
       const data = {
-        dueDate,
+        date: dueDate,
         description,
         amount,
         category,
         createdAt: new Date(),
       };
-  
+
       //Move the logic outside the addData function
       const res = await axios.post('http://localhost:5000/api/expenses', data);
-  
+
       if (res.status >= 200 && res.status < 300) {
         // Handle successful response
         console.log('Success:', res.data);
-        
+
         // You can perform further actions here based on the successful response
       } else {
         // Handle unsuccessful response (non-2xx status code)
@@ -53,7 +53,7 @@ const AddExpense = () => {
       console.error('Error in handleSubmit:', error);
     }
   };
-  
+
 
   return (
     <div className="expense-details">

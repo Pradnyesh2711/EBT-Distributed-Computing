@@ -7,26 +7,58 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+
 
 const Modal = (prop) => {
   const { handleCloseBtn, details } = prop;
   const [description, setDescription] = useState(details.description);
   const [amount, setAmount] = useState(details.amount);
   const [category, setCategory] = useState(details.category);
-  const [dueDate, setStartDate] = useState(new Date(details.dueDate));
-  const dispatch = useDispatch();
+  const [dueDate, setStartDate] = useState(new Date(details.date));
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const updatedData = {
-      dueDate,
+      date: dueDate,
       description,
       amount,
       category,
       createdAt: details.createdAt,
     };
-    dispatch(editExpense(updatedData));
-    toast("Data Updated SuccessFully !!!");
-    handleCloseBtn();
+
+
+    const updateRes = await axios.put(
+      `http://localhost:5000/api/expenses/${details._id}`,
+      {
+        ...updatedData,
+      }
+    );
+
+    if (updateRes.status >= 200 && updateRes.status <= 300) {
+      // dispatch(editExpense(updatedData));
+      toast("Data Updated SuccessFully !!!");
+      handleCloseBtn();
+
+      // Update the item in the listArr state
+      prop.setListArr((prevList) =>
+        prevList.map((expense) => {
+          if (expense._id === details._id) {
+            return {
+              ...expense,
+              ...updatedData,
+            };
+          } else {
+            return expense;
+          }
+        })
+      );
+    } else {
+      toast("Data Updation failed !!!");
+    }
+
+
+
+
   };
 
   return (

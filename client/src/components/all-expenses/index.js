@@ -16,7 +16,7 @@ const AllExpenses = () => {
   const [listArr, setListArr] = useState(list);
   const [currentCategorySeached, setCurrentCategorySearched] = useState("All");
   let categoryList = getUniqueCategories(list);
-  const dropdownCategories = [{ types: categoryList }];
+  const [dropdownCategories, setDropdownCategories] = useState([{ types: categoryList }])
 
   const filterByCategory = (category) => {
     setCurrentCategorySearched(category);
@@ -26,7 +26,9 @@ const AllExpenses = () => {
   };
 
   useEffect(() => {
-    setListArr(listArr);
+    let temp = getUniqueCategories(listArr)
+    console.log(temp);
+    setDropdownCategories([{ types: temp }])
   }, [listArr]);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ const AllExpenses = () => {
         </div>
       </div>
       <div>
-        <ExpenseTable list={listArr} />
+        <ExpenseTable list={listArr} setListArr={setListArr} />
       </div>
     </div>
   );
