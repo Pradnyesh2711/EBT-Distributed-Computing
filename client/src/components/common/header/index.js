@@ -19,7 +19,7 @@ const Header = () => {
             All Expenses
           </label>
         </Link>
-        <Link to="/expenses-analysis">
+        {/* <Link to="/expenses-analysis">
           <label
             className={`menu-option ${
               tab === "expenses-analysis" && "active-tab"
@@ -28,7 +28,7 @@ const Header = () => {
           >
             Expenses Analysis
           </label>
-        </Link>
+        </Link> */}
         <Link to="/due-expenses">
           <label
             className={`menu-option ${tab === "due-analysis" && "active-tab"}`}

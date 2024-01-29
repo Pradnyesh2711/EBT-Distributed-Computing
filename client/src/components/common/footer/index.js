@@ -5,17 +5,46 @@ const Footer = () => {
   return (
     <div className="footer">
       <h4>
-       Made  by{" "}
+        Made by{" "}
         <a
-          href=""
+          href="https://github.com/omkar787"
           className="author-name"
           target="_blank"
           rel="noreferrer"
         >
-          DC
+          Omkar
+        </a>
+        ,{" "}
+        <a
+          href="https://github.com/Pradnyesh2711"
+          className="author-name"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Pradnyesh
+        </a>
+
+        ,{" "}
+        <a
+          href="https://github.com/surabhimahale"
+          className="author-name"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Surabhi
         </a>{" "}
-        as{" "}
-          PROJECT
+        , and{" "}
+        <a
+          href="https://github.com/Sandesh"
+          className="author-name"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Sandesh
+        </a>
+
+
+        for DC PROJECT
       </h4>
     </div>
   );

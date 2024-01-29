@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "./due-expense.css";
 import dateFormat from "dateformat";
@@ -7,15 +7,61 @@ import { toast } from "react-toastify";
 
 const DueExpenses = () => {
   const [limit, setLimit] = useState(0);
-  const { expenseList: list } = useSelector((state) => state.expenses);
-  const [sortedListArray, setSortedListArray] = useState(
-    [...list]
-      .map((v) => ({ ...v, isHighlighted: false }))
-      .sort((a, b) => b.amount - a.amount)
-  );
+
+  const [sortedListArray, setSortedListArray] = useState([]);
   const handleMonthlyBudget = (e) => {
     setLimit(e.target.value);
   };
+
+
+
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/budget").then((res) => {
+      if (res.status >= 200 && res.status <= 300) {
+        console.log(res.data);
+        setLimit(res.data.amount);
+      } else {
+        console.log("Failed to fetch budget data");
+      }
+    }
+    );
+
+  }, [])
+
+  useEffect(() => {
+    fetchExpenses();
+  }, [limit])
+
+
+
+  const fetchExpenses = async () => {
+    try {
+      let tempLimit = limit;
+      const response = await axios.get("http://localhost:5000/api/expenses");
+      const expenses = response.data;
+      let tempData = expenses.sort((a, b) => a.amount - b.amount).map((v) => {
+        if (tempLimit >= v.amount) {
+          tempLimit -= v.amount;
+          return { ...v, isHighlighted: true }
+        }
+        else {
+
+          return { ...v, isHighlighted: false }
+        }
+
+
+
+      })
+      setSortedListArray(() => tempData); // Assuming you have a state variable named `list` to store the expenses
+
+      console.log(tempData);
+
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+    }
+  };
+
 
   const handleLimit = async () => {
     try {

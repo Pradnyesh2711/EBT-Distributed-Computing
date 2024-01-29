@@ -15,15 +15,25 @@ const AllExpenses = () => {
   let { expenseList: list } = useSelector((state) => state.expenses);
   const [listArr, setListArr] = useState(list);
   const [currentCategorySeached, setCurrentCategorySearched] = useState("All");
-  let categoryList = getUniqueCategories(list);
-  const [dropdownCategories, setDropdownCategories] = useState([{ types: categoryList }])
+  const [dropdownCategories, setDropdownCategories] = useState()
 
   const filterByCategory = (category) => {
     setCurrentCategorySearched(category);
+    console.log(list);
+    let temp = [...listArr];
     if (category !== "All")
-      list = list.filter((item) => item.category === category);
-    setListArr(list);
+      temp = temp.filter((item) => item.category === category);
+
+
+    console.log(list);
+    setListArr(temp);
   };
+
+  useEffect(() => {
+    let categoryList = getUniqueCategories(listArr);
+    setDropdownCategories([{ types: categoryList }])
+  }, [])
+
 
   useEffect(() => {
     let temp = getUniqueCategories(listArr)
@@ -32,16 +42,16 @@ const AllExpenses = () => {
   }, [listArr]);
 
   useEffect(() => {
-    setListArr(list);
-    if (currentCategorySeached !== "All")
-      list = list.filter((item) => item.category === currentCategorySeached);
-    setListArr(list);
+    // setListArr(list);
+    // if (currentCategorySeached !== "All")
+    //   list = list.filter((item) => item.category === currentCategorySeached);
+    // setListArr(list);
   }, [list]);
 
   return (
     <div className="all-expenses">
       <div className="all-expenses-options">
-        <div className="options-dropdown">
+        {/* <div className="options-dropdown">
           <div className="dropdown-parent">
             <label className="dropdown-title-label">Choose Your Category</label>
             <Dropdown
@@ -54,7 +64,7 @@ const AllExpenses = () => {
               }
             />
           </div>
-        </div>
+        </div> */}
         <div>
           <Link to="/add-expense">
             <button className="add-expense-btn">Add Expense</button>
