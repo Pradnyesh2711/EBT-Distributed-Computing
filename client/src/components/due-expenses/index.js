@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import "./due-expense.css";
 import dateFormat from "dateformat";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const DueExpenses = () => {
   const [limit, setLimit] = useState(0);
@@ -82,7 +82,7 @@ const DueExpenses = () => {
             }
           );
           if (updateRes.status >= 200 && updateRes.status <= 300) {
-            console.log("Budget updated in the database");
+            toast("Budget updated in the database");
           } else {
             console.log("Failed to update budget in the database");
           }
@@ -120,6 +120,14 @@ const DueExpenses = () => {
 
   return (
     <div className="due-expenses">
+      <ToastContainer
+        position="bottom-left"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+      />
       <div className="input-bill-amount">
         <label className="input-bill-amount-label">
           Enter your Monthly Budget

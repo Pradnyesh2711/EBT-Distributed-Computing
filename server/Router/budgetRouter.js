@@ -14,7 +14,7 @@ budgetRouter.post('/', async (req, res) => {
     if (existingBudget) {
       return res.status(400).json({ message: 'Budget already exists' });
     }
-    
+
     const newBudget = await Budget.create({ amount });
 
     res.status(201).json({ message: 'Budget added successfully', data: newBudget });
@@ -37,11 +37,11 @@ budgetRouter.get('/', async (req, res) => {
 });
 
 // PUT
-budgetRouter.put('/', async (req, res) => {
+budgetRouter.put('/:id', async (req, res) => {
   try {
     const { amount } = req.body;
 
-    const updatedBudget = await Budget.findOneAndUpdate({}, { amount }, { new: true });
+    const updatedBudget = await Budget.findOneAndUpdate({ _id: req.params.id }, { amount }, { new: true });
 
     if (!updatedBudget) {
       return res.status(404).json({ message: 'Budget not found' });
@@ -63,7 +63,7 @@ budgetRouter.delete('/', async (req, res) => {
       return res.status(404).json({ message: 'Budget not found' });
     }
 
-    res.sendStatus(204); 
+    res.sendStatus(204);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ message: 'Failed to delete budget', error: error.message });
