@@ -18,7 +18,7 @@ const ExpenseTable = (props) => {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/expenses");
+        const response = await axios.get("http://192.168.62.78:5000/api/expenses");
         const expenses = response.data;
         setListArr(expenses); // Assuming you have a state variable named `list` to store the expenses
       } catch (error) {
@@ -34,7 +34,7 @@ const ExpenseTable = (props) => {
   const dispatch = useDispatch();
   const handleDeleteExpense = async (item) => {
     try {
-      const res = await axios.delete(`http://localhost:5000/api/expenses/${item._id}`);
+      const res = await axios.delete(`http://192.168.62.78:5000/api/expenses/${item._id}`);
       if (res.status >= 200 && res.status < 300) {
         // dispatch(deleteExpense(item));
         toast("Data Deleted Successfully !!!");
