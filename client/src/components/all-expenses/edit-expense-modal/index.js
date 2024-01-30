@@ -28,7 +28,7 @@ const Modal = (prop) => {
 
 
     const updateRes = await axios.put(
-      `http://localhost:5000/api/expenses/${details._id}`,
+      `http://172.16.30.78:5000/api/expenses/${details._id}`,
       {
         ...updatedData,
       }
