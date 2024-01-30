@@ -17,7 +17,7 @@ const DueExpenses = () => {
 
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/budget").then((res) => {
+    axios.get("http://192.168.62.78:5000/api/budget").then((res) => {
       if (res.status >= 200 && res.status <= 300) {
         console.log(res.data);
         setLimit(res.data.amount);
@@ -38,7 +38,7 @@ const DueExpenses = () => {
   const fetchExpenses = async () => {
     try {
       let tempLimit = limit;
-      const response = await axios.get("http://localhost:5000/api/expenses");
+      const response = await axios.get("http://192.168.62.78:5000/api/expenses");
       const expenses = response.data;
       let tempData = expenses.sort((a, b) => a.amount - b.amount).map((v) => {
         if (tempLimit >= v.amount) {
@@ -67,7 +67,7 @@ const DueExpenses = () => {
     try {
       // Check if budget data already exists
       const existingBudgetRes = await axios.get(
-        "http://localhost:5000/api/budget"
+        "http://192.168.62.78/api/budget"
       );
       if (existingBudgetRes.status >= 200 && existingBudgetRes.status <= 300) {
         // If budget data exists, extract the ID
@@ -76,7 +76,7 @@ const DueExpenses = () => {
           const budgetId = existingBudget._id;
           // Use PUT request to update existing budget
           const updateRes = await axios.put(
-            `http://localhost:5000/api/budget/${budgetId}`,
+            `http://192.168.62.78/api/budget/${budgetId}`,
             {
               amount: limit,
             }
@@ -89,7 +89,7 @@ const DueExpenses = () => {
         }
       } else {
         // If no budget data exists, add a new budget record with POST request
-        const res = await axios.post("http://localhost:5000/api/budget", {
+        const res = await axios.post("http://192.168.62.78/api/budget", {
           amount: limit,
         });
         if (res.status >= 200 && res.status <= 300) {

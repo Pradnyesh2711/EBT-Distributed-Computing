@@ -31,7 +31,7 @@ const AddExpense = () => {
       };
 
       //Move the logic outside the addData function
-      const res = await axios.post('192.168.62.78:5000/api/expenses', data);
+      const res = await axios.post('http://192.168.62.78:5000/api/expenses', data);
 
       if (res.status >= 200 && res.status < 300) {
         // Handle successful response
